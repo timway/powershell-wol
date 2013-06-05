@@ -69,7 +69,10 @@ if ($fromfile)
 		Exit
 	}
 }
-else { $macs = ,$mac }
+else
+{
+	$macs = ,$mac
+}
 
 foreach($mac in $macs)
 {
