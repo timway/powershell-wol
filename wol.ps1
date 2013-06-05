@@ -28,7 +28,7 @@ function Build-Packet-Payload($m)
 #Outputs the payload of a packet. This will most likely only be used for testing.
 function Display-Packet-Payload($p)
 {
-	for ($z = 0; $z -lt 102; $z = $z + 6) { for ($y = 0; $y -lt 6; $y++) { Write-Host -nonewline $p[$y+$z].ToString("X2") } Write-Host }
+	for ($z = 0; $z -lt 102; $z = $z +6) { for ($y = 0; $y -lt 6; $y++) { Write-Host -nonewline $p[$y+$z].ToString("X2") } Write-Host }
 }
 
 #Send-Packet
@@ -55,9 +55,9 @@ if ($fromfile)
 	if (Test-Path $fromfile)
 	{
 		$content = Get-Content $fromfile
-		foreach($z in $content)
+		foreach ($z in $content)
 		{
-			if($z -match "^(..)-(..)-(..)-(..)-(..)-(..)$|^(..):(..):(..):(..):(..):(..)$|^(..)(..)(..)(..)(..)(..)$")
+			if ($z -match "^(..)-(..)-(..)-(..)-(..)-(..)$|^(..):(..):(..):(..):(..):(..)$|^(..)(..)(..)(..)(..)(..)$")
 			{
 				$macs += ,$z
 			}
@@ -74,7 +74,7 @@ else
 	$macs = ,$mac
 }
 
-foreach($mac in $macs)
+foreach ($mac in $macs)
 {
 	$payload = Build-Packet-Payload $mac
 	Send-Packet $attempts $broadcasttosubnet $payload $udpclient
