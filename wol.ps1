@@ -37,8 +37,10 @@ function Display-Packet-Payload($p)
 #Parameter $b: translates to the $broadcasttosubnet variable either input by the user or set to the default value of "255.255.255.255"
 #Parameter $p: the payload of the packet built by an earlier call to Build-Packet-Payload
 #Parameter $u: the UdpClient .NET object to use to send the packet
-function Send-Packet($a,$b,$p,$u)
+function Send-Packet($a,$b,$p)
 {
+	$u = new-Object System.Net.Sockets.UdpClient
+	$u.Connect($b,9)
 	for ($z = 0; $z -lt $a; $z++) { $u.Send($p, $p.Length) | Out-Null }
 }
 #Function Code: End
@@ -46,9 +48,6 @@ function Send-Packet($a,$b,$p,$u)
 #Declare Variables: Start
 $macs = $null #an array of mac addresses that we will send WOL magic packets to
 #Declare Variables: End
-
-$udpclient = new-Object System.Net.Sockets.UdpClient
-$udpclient.Connect($broadcasttosubnet,9)
 
 if ($fromfile)
 {
@@ -77,5 +76,5 @@ else
 foreach ($mac in $macs)
 {
 	$payload = Build-Packet-Payload $mac
-	Send-Packet $attempts $broadcasttosubnet $payload $udpclient
+	Send-Packet $attempts $broadcasttosubnet $payload
 }
