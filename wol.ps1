@@ -3,7 +3,7 @@
 #http://way.vg/blog
 
 #Handle Parameters: Start
-param( [string]$attempts = 1,[string]$broadcasttosubnet = "255.255.255.255",[string]$fromfile = $null,[string]$mac = $null )
+param( [string]$attempts = 1,[string]$broadcasttosubnet = "255.255.255.255",[string]$fromfile = $null,[string]$mac = $null,[int]$port = 0 )
 #Handle Parameters: End
 
 #Function Code: Start
@@ -36,11 +36,12 @@ function Display-Packet-Payload($p)
 #Parameter $a: translates to the $attempts variable either input by the user or set to the default value of 1
 #Parameter $b: translates to the $broadcasttosubnet variable either input by the user or set to the default value of "255.255.255.255"
 #Parameter $p: the payload of the packet built by an earlier call to Build-Packet-Payload
-#Parameter $u: the UdpClient .NET object to use to send the packet
-function Send-Packet($a,$b,$p)
+#Parameter $port: the udp port to use
+#Variable  $u: the UdpClient .NET object to use to send the packet
+function Send-Packet($a,$b,$p,$port)
 {
 	$u = new-Object System.Net.Sockets.UdpClient
-	$u.Connect($b,9)
+	$u.Connect($b,$port)
 	for ($z = 0; $z -lt $a; $z++) { $u.Send($p, $p.Length) | Out-Null }
 }
 #Function Code: End
@@ -76,5 +77,5 @@ else
 foreach ($mac in $macs)
 {
 	$payload = Build-Packet-Payload $mac
-	Send-Packet $attempts $broadcasttosubnet $payload
+	Send-Packet $attempts $broadcasttosubnet $payload $port
 }
